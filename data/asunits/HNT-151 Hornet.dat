@@ -1,0 +1,27 @@
+[GENERAL]
+name = Hornet HNT-151
+kind = BM
+role = Striker
+size = 1
+points = 14
+
+[MOBILITY]
+tmm = 2
+move = 5
+jumpMove = 5
+
+[DEFENSE]
+armor = 2
+structure = 2
+
+# Any S/M/L value of 0 is actually * in AS Rules. For an actual 0, leave the entry blank. This does
+# not apply to overheat.
+[BASE_DAMAGE]
+short = 1
+medium = 1
+long = 0
+overheat = 0
+
+# An "indirect_fire value of 0 is actually * in AS Rules. For an actual 0, do not include the entry.
+[SPECIALS]
+indirect_fire = 0

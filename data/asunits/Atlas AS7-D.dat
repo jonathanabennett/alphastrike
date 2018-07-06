@@ -1,0 +1,37 @@
+[GENERAL]
+name = Atlas AS7-D
+kind = BM
+role = Juggernaut
+size = 4
+points = 52
+
+[MOBILITY]
+tmm = 1
+move = 3
+jumpMove = 0
+
+[DEFENSE]
+armor = 10
+structure = 8
+
+[BASE_DAMAGE]
+short = 5
+medium = 5
+long = 2
+overheat = 0
+
+[AC_DAMAGE]
+short = 2
+medium = 2
+
+[LRM_DAMAGE]
+short = 1
+medium = 1
+long = 1
+
+[REAR_DAMAGE]
+short = 1
+medium = 1
+
+[SPECIALS]
+indirect_fire = 1

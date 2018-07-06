@@ -1,0 +1,24 @@
+[GENERAL]
+name = Atlas AS7-RS
+kind = BM
+role = Juggernaut
+size = 4
+points = 48
+
+[MOBILITY]
+tmm = 1
+move = 3
+jumpMove = 0
+
+[DEFENSE]
+armor = 10
+structure = 8
+
+[BASE_DAMAGE]
+short = 3
+medium = 4
+long = 1
+overheat = 1
+
+[SPECIALS]
+indirect_fire = 1
