@@ -1,8 +1,8 @@
 #include mapsheet
 #include element
 
-import nimx.window
-import nimx.text_field
+import nimx / [ view, image, image_view, context, render_to_image, font, window, text_field]
+import nimx.assets.asset_manager
 import os
 
 #type
@@ -30,15 +30,17 @@ import os
 #proc addUnit(game: Game, unit: Element): bool {.discardable.} =
   # Add units here, return True if the unit adds and false if it doesn't
 #  game.units.add(unit)
-#  result = true
 
 proc startApp() = 
   var wnd = newWindow(newRect(40, 40, 800, 600))
+  let ground_hex = newImageView(newRect(0, 0, 50, 50))
+  ground_hex.fillRule = ImageFillRule.FitWidth
+  sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, err: string):
+    ground_hex.image = i
 
-  # Create a static label and add it to the hierarchy
-  let label = newLabel(newRect(20, 20, 150, 20))
-  label.text = "Hello, world!"
-  wnd.addSubview(label)
+  wnd.addSubView(ground_hex)
+
+
 
 runApplication:
   startApp()
