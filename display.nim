@@ -1,13 +1,11 @@
-#include mapsheet
+include mapsheet
 #include element
 
 import nimx / [ view, image, image_view, context, render_to_image, font, window, text_field]
 import nimx.assets.asset_manager
 import os
 
-type
-  TileArray = array[2, ImageView]
-
+#type
 #  Game = ref object of RootObj
 #    mapsheet: Map
 #    units: seq[Element]
@@ -33,24 +31,43 @@ type
   # Add units here, return True if the unit adds and false if it doesn't
 #  game.units.add(unit)
 
+proc newTile(x: float, y: float, width: float, height: float, i: Image): ImageView =
+  result = newImageView(newRect(x, y, width, height))
+  result.fillRule = ImageFillRule.FitWidth
+  result.image = i
+
 proc startApp() =
+  var mapsheet = loadMap("data/boards/battletech.board")
   var wnd = newWindow(newRect(40, 40, 800, 600))
   var hex_width = 50
   var hex_height = 50
-  var tiles: TileArray
-  tiles[0] = newImageView(newRect(0,0,50,50))
-  tiles[1] = newImageView(newRect(50,0,50,50))
+  var tiles: seq[ImageView] = @[]
 
-  sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, err: string):
-    tiles[0].fillRule = ImageFillRule.FitWidth
-    tiles[0].image = i
+  for hex in mapsheet.grid:
+    let x = hex_width.float * hex.x.float
+    let y = hex_height.float * hex.y.float
+    case hex.terrain
+    of WATER:
+      sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
+        tiles.add(newTile(x, y, 50.float, 50.float, i))
+    of CLEAR:
+      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+        tiles.add(newTile(x, y, 50.float, 50.float, i))
+    of LIGHT_WOODS:
+      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+        tiles.add(newTile(x, y, 50.float, 50.float, i))
+    of HEAVY_WOODS:
+      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+        tiles.add(newTile(x, y, 50.float, 50.float, i))
+    of ROUGH:
+      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+        tiles.add(newTile(x, y, 50.float, 50.float, i))
+    else:
+      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+        tiles.add(newTile(x, y, 50.float, 50.float, i))
 
-  sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
-    tiles[1].fillRule = ImageFillRule.FitWidth
-    tiles[1].image = i
-
-  wnd.addSubView(tiles[0])
-  wnd.addSubView(tiles[1])
+  for t in tiles:
+    wnd.addSubView(t)
 
 
 
