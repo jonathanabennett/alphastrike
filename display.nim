@@ -5,7 +5,9 @@ import nimx / [ view, image, image_view, context, render_to_image, font, window,
 import nimx.assets.asset_manager
 import os
 
-#type
+type
+  TileArray = array[2, ImageView]
+
 #  Game = ref object of RootObj
 #    mapsheet: Map
 #    units: seq[Element]
@@ -31,14 +33,24 @@ import os
   # Add units here, return True if the unit adds and false if it doesn't
 #  game.units.add(unit)
 
-proc startApp() = 
+proc startApp() =
   var wnd = newWindow(newRect(40, 40, 800, 600))
-  let ground_hex = newImageView(newRect(0, 0, 50, 50))
-  ground_hex.fillRule = ImageFillRule.FitWidth
-  sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, err: string):
-    ground_hex.image = i
+  var hex_width = 50
+  var hex_height = 50
+  var tiles: TileArray
+  tiles[0] = newImageView(newRect(0,0,50,50))
+  tiles[1] = newImageView(newRect(50,0,50,50))
 
-  wnd.addSubView(ground_hex)
+  sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, err: string):
+    tiles[0].fillRule = ImageFillRule.FitWidth
+    tiles[0].image = i
+
+  sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
+    tiles[1].fillRule = ImageFillRule.FitWidth
+    tiles[1].image = i
+
+  wnd.addSubView(tiles[0])
+  wnd.addSubView(tiles[1])
 
 
 
