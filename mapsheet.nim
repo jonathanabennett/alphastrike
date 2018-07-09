@@ -1,7 +1,9 @@
 import
-  parsecfg, os, strutils, streams
+  parsecfg, os, strutils, streams, tables
 
 type
+  Location = tuple[x: float, y: float]
+
   TerrainType = enum
     CLEAR
     WATER
@@ -10,8 +12,7 @@ type
     HEAVY_WOODS
 
   Tile = ref object of RootObj
-    x*: int
-    y*: int
+    loc*: Location
     level*: int
     terrain*: TerrainType
 
@@ -19,36 +20,37 @@ type
     id: int
     width*: int
     height*: int
-    grid*: seq[Tile]
+    grid*: Table[Location, Tile]
 
-proc tileCreator(x: int, y: int, level: int, terrain: TerrainType): Tile =
-  result = Tile(x: x, y: y, level: level, terrain: terrain)
+proc tileCreator(location: Location, level: int, terrain: TerrainType): Tile =
+  result = Tile(loc: location, level: level, terrain: terrain)
 
-proc mapCreator(id: int, width: int, height: int): Map =
-  var grid: seq[Tile] = @[]
-  for y in 0..<height:
-    for x in 0..<width:
-      if x mod 2 == 0:
-        grid.add(tileCreator(x, y, 0, CLEAR))
-      else:
-        grid.add(tileCreator(x, y, 0, ROUGH))
-
-  result = Map(id: id, width: width, height: height, grid: grid)
+#proc mapCreator(id: int, width: int, height: int): Map =
+#  var grid: Table[string; Tile]
+#  for y in 0..<height:
+#    for x in 0..<width:
+#      if x mod 2 == 0:
+#        grid.add(tileCreator(x, y, 0, CLEAR))
+#      else:
+#        grid.add(tileCreator(x, y, 0, ROUGH))
+#
+#  result = Map(id: id, width: width, height: height, grid: grid)
 
 proc loadMap(filepath: string): Map =
-  var width, height: int
-  var grid: seq[Tile] = @[]
+  new result
+  result.grid = initTable[Location, Tile]()
 
   block readboard:
     for line in lines filepath:
       var substrings = line.splitWhitespace
       case substrings[0]
       of "size":
-        width = substrings[1].parseInt
-        height = substrings[2].parseInt
+        result.width = substrings[1].parseInt
+        result.height = substrings[2].parseInt
       of "hex":
-        var x = substrings[1][0..1].parseInt
-        var y = substrings[1][2..3].parseInt
+        var x = substrings[1][0..1].parseFloat
+        var y = substrings[1][2..3].parseFloat
+        var loc_tuple = (x, y)
         var level: int = substrings[2].parseInt
       
         var terrain_str: string = substrings[3].strip(true, true,{'"'})
@@ -69,7 +71,6 @@ proc loadMap(filepath: string): Map =
           else:
             echo terrain_str, " does not match anything!!!"
             terrain = CLEAR
-        grid.add(tileCreator(x, y, level, terrain))
+        result.grid[loc_tuple] = tileCreator(loc_tuple, level, terrain)
       of "end": break readboard
 
-  result = Map(id:0, width: width, height: height, grid: grid)

@@ -3,7 +3,10 @@ include mapsheet
 
 import nimx / [ view, image, image_view, context, render_to_image, font, window, text_field]
 import nimx.assets.asset_manager
-import os
+import os, logging
+
+var rolling_log = newRollingFileLogger("alphastrike.log", fmtStr = verboseFmtStr)
+addHandler(rolling_log)
 
 #type
 #  Game = ref object of RootObj
@@ -38,36 +41,37 @@ proc newTile(x: float, y: float, width: float, height: float, i: Image): ImageVi
 
 proc startApp() =
   var mapsheet = loadMap("data/boards/battletech.board")
-  var wnd = newWindow(newRect(40, 40, 800, 600))
-  var hex_width = 50
-  var hex_height = 50
-  var tiles: seq[ImageView] = @[]
+  var wnd = newWindow(newRect(40, 40, 1000, 1000))
+  var hex_width = 50.float
+  var hex_height = 50.float
 
-  for hex in mapsheet.grid:
-    let x = hex_width.float * hex.x.float
-    let y = hex_height.float * hex.y.float
-    case hex.terrain
-    of WATER:
-      sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
-        tiles.add(newTile(x, y, 50.float, 50.float, i))
-    of CLEAR:
-      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-        tiles.add(newTile(x, y, 50.float, 50.float, i))
-    of LIGHT_WOODS:
-      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-        tiles.add(newTile(x, y, 50.float, 50.float, i))
-    of HEAVY_WOODS:
-      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-        tiles.add(newTile(x, y, 50.float, 50.float, i))
-    of ROUGH:
-      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-        tiles.add(newTile(x, y, 50.float, 50.float, i))
-    else:
-      sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-        tiles.add(newTile(x, y, 50.float, 50.float, i))
+  for loc, hex in pairs(mapsheet.grid):
+    case hex.terrain:
+      of WATER:
+        sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
+          info("Hex of ", $hex.terrain, " at ", $(loc.x*hex_width), " , ", $(loc.y*hex_height))
+          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+      of CLEAR:
+        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+      of LIGHT_WOODS:
+        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+      of HEAVY_WOODS:
+        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+      of ROUGH:
+        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+      else:
+        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
 
-  for t in tiles:
-    wnd.addSubView(t)
 
 
 
