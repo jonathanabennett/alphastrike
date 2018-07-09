@@ -45,32 +45,36 @@ proc startApp() =
   var hex_width = 50.float
   var hex_height = 50.float
 
-  for loc, hex in pairs(mapsheet.grid):
-    case hex.terrain:
-      of WATER:
-        sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
-          info("Hex of ", $hex.terrain, " at ", $(loc.x*hex_width), " , ", $(loc.y*hex_height))
-          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
-      of CLEAR:
-        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
-          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
-      of LIGHT_WOODS:
-        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
-          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
-      of HEAVY_WOODS:
-        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
-          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
-      of ROUGH:
-        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
-          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
-      else:
-        sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
-          info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
-          wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+  for loopLoc, loopHex in pairs(mapsheet.grid):
+    closureScope:
+      let
+        loc = loopLoc
+        hex = loopHex
+      case hex.terrain:
+        of WATER:
+          sharedAssetManager().getAssetAtPath("images/water.png") do(i: Image, er: string):
+            info("Hex of ", $hex.terrain, " at ", $(loc.x*hex_width), " , ", $(loc.y*hex_height))
+            wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+        of CLEAR:
+          sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+            info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+            wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+        of LIGHT_WOODS:
+          sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+            info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+            wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+        of HEAVY_WOODS:
+          sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+            info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+            wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+        of ROUGH:
+          sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+            info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+            wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
+        else:
+          sharedAssetManager().getAssetAtPath("images/land.png") do(i: Image, er: string):
+            info("Hex of ", $hex.terrain, " at ", $(loc.x*50.float), " , ", $(loc.y*hex_height))
+            wnd.addSubView(newTile(loc.x*hex_width, loc.y*hex_height, hex_width, hex_height, i))
 
 
 
